@@ -1,0 +1,184 @@
+\documentclass[letterpaper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{amsfonts}
+\usepackage{mathptmx}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1.3in]{geometry}
+\usepackage{amsthm}
+\usepackage{marvosym}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage[tableaux]{prooftrees}
+
+
+\linespread{1.3}
+
+
+\usetikzlibrary{automata, positioning, arrows, fit}
+\tikzset{
+  ->,
+  >=stealth',
+  node distance=2cm,
+  every state/.style={thick},
+  initial text=$ $,
+}
+
+\renewcommand\qedsymbol{\Squarepipe}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definición}[section]
+\newtheorem*{thm}{Teorema}
+
+
+\setlength\parindent{0pt}
+
+\newcounter{paragraphnumber}
+\newcommand{\para}{%
+  \vspace{10pt}\noindent{\bfseries\refstepcounter{paragraphnumber}\theparagraphnumber.\quad}%
+}
+
+%\setsecheadstyle{\large\bfseries}
+%\setsubsecheadstyle{\bfseries}
+
+\setlength\parindent{0pt}
+
+\pagenumbering{gobble}
+
+%\usepackage[margin=1in]{geometry}
+
+\usepackage{enumitem}
+\setlist{nosep}
+
+\usepackage{xcolor}
+
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks,
+  linkcolor={red!50!black},
+  citecolor={blue!50!black},
+  urlcolor={green!50!black}
+}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\begin{document}
+
+\begin{center}
+  {\large Lógica Computacional}\\
+  \vspace{0.2cm}
+  {\large\bfseries Tarea 2}\\
+  \vspace{0.2cm}
+  {\large PCIC - UNAM}\\
+  \vspace{0.5cm}
+  {\itshape 12 de marzo de 2020}\\
+  \vspace{0.5cm}
+  Diego de Jesús Isla López\\
+  (\href{mailto:dislalopez@gmail.com}{\itshape dislalopez@gmail.com})\\
+  (\href{mailto:diego.isla@comunidad.unam.mx}{\itshape diego.isla@comunidad.unam.mx})\\
+\end{center}
+
+
+% \section*{Problema 4.3}
+
+% Simplificar los siguientes conjuntos de cláusulas. Esto es, para cada conjunto \(S\), encontrar un conjunto más simple \(S'\) tal que  \(S'\) es satisfactible sii  \(S\) es satisfactible.
+
+% \begin{enumerate}
+%   \item \(p\bar{q}, q\bar{r}, rs, p\bar{s}\):
+%     \begin{align*}
+%       &=  p \bar{r}, rs, p \bar{s}\\
+%       &=  ps, p \bar{s}\\
+%       &=  p
+%     \end{align*}
+%   \item \(pqr, \bar{q}, p\bar{r}s, qs, p\bar{s}\):
+%     \begin{align*}
+%       &=  pr, p\bar{r}s, qs, p\bar{s}\\
+%       &=  ps, qs, p\bar{s}\\
+%       &=  p, qs
+%     \end{align*}
+%   \item \(pqrs, \bar{q}rs, \bar{p}rs, qs, \bar{p}s\):
+%     \begin{align*}
+%       &=  prs, \bar{p}rs, qs, \bar{p}s\\
+%       &= rs, qs, \bar{p}s
+%     \end{align*}
+%   \item \(pq, qrs, \bar{p}\bar{q}rs, \bar{r}, q\):
+%   \begin{align*}
+%     &= pq, qrs, \bar{p}rs, \bar{r}\\
+%     &=  pq, qrs, \bar{p}s\\
+%     &=  qs, qrs
+%   \end{align*}
+% \end{enumerate}
+
+
+% \section*{Problema 4.4}
+
+% Dado el conjunto de cláusulas \(\{\bar{p}\bar{q}r, pr, qr, \bar{r} \}\), construir dos refutaciones: una resolviendo las literales en el orden \(\{p, q, r\}\) y otra en el orden \(\{r, q, p\}\).\\
+
+% \begin{enumerate}
+%   \item \(\{\bar{p}\bar{q}r (1), pr (2), qr (3), \bar{r} (4) \}\):
+%     \begin{align*}
+%       5. & \bar{q}r & 1,2\\
+%       6. & r & 3,5\\
+%       7. & \square & 4,6 
+%     \end{align*}
+%   \item \(\{\bar{r} (1), r\bar{q}\bar{p} (2), rp (3), rq(4)\}\):
+%   \begin{align*}
+%     5. & \bar{q}\bar{p} & 1,2\\
+%     6. & p & 1,3\\
+%     7. & q & 1,4\\
+%     8. & \bar{p} & 5,7\\
+%     9. & \square & 6,8
+%   \end{align*}
+% \end{enumerate}
+
+
+
+% \section*{Problema 4.5}
+
+% Transformar el conjunto de fórmulas \(\{p, p \rightarrow ((q \lor r)\land \neg(q \land r)), p \rightarrow ((s \lor t) \land \neg (s \land t)), s \rightarrow q, \neg r \rightarrow t, t \rightarrow s  \}\) a CNF y refutarla usando resolución.\\ 
+
+% Haciendo la transformación, tenemos:
+
+% \begin{equation*}
+%   \{p(1), \bar{p}qr(2), \bar{p}\bar{q}\bar{r}(3), \bar{p}st(4), \bar{p}\bar{s}\bar{t}(5), \bar{s}q(6), rt(7), \bar{t}s(8) \}
+% \end{equation*}
+
+% Aplicando el algoritmo:\\
+
+% \begin{align*}
+%    9. & st & 1,4\\
+%    10. & s & 8,9 \\
+%    11. & q & 10,6\\
+%    12. & qr & 1,2\\
+%    13. & \bar{q}\bar{r} & 1,3\\
+%    14. & \bar{s}\bar{t} & 1,5\\
+%    15. & \bar{t} & 14,8\\
+%    16. & r & 15,7\\
+%    17. & \bar{q} & 16,13\\
+%    18. & \square & 11,17
+% \end{align*}
+
+
+\section*{Problema 4.13}
+
+Demostrar el teorema 4.13 sobre la correctitud del algoritmo CNF-a-3CNF.
+
+\begin{thm}
+  Sea \(A\) una fórmula en CNF y sea \(A'\) la fórmula en 3CNF construida a partir de \(A\). Entonces \(A\) es satisfactible sii \(A'\) es satisfactible. La longitud de \(A'\) es un polinomio en la longitud de \(A\).
+\end{thm}
+
+
+\begin{proof}
+  Sea \(A\) un conjunto de literales tal que \(|A| = k\) para \(k >= 1\). La demostración procede por casos según la longitud de \(A\) y el resultado del algoritmo.
+
+  \begin{itemize}
+    \item \textbf{Caso 1 (\(k = 1\)): } Entonces, \(A = \{x_1\}\) y \(A' = \{ \{x_1, y, z\}, \{x_1, \bar{y}, z\}, \{x_1, y, \bar{z}\}, \{x_1, \bar{y}, \bar{z} \} \}\). Dado que \(A\) consta de una sola literal, si esta se satisface, entonces todas las cláusulas de \(A'\) se satisfacen.
+    \item \textbf{Caso 2 (\(k = 2\)): } Entonces, \(A = \{x_1, x_2\}\) y \(A' = \{ \{x_1, x_2, z\}, \{x_1, x_2, \bar{z} \}\). Dado que \(A\) consta de dos literales, basta con que alguna de ellas se satisfaga para que las cláusulas de \(A'\) se satisfagan.
+    \item \textbf{Caso 3 (\(k > 3\)): } Entonces, \(A = \{x_1, x_2, x_3, ..., x_k\}\). Tomemos \(x_m = 1\) para alguna \(m\) tal que \(2 < m < k - 1\). Tomemos \(z_i = 1\) para toda \(i \leq m - 2\) y \(z_j = 0\) para toda \(j \geq m - 1\). Sea \( A'_m \in A' \) la cláusula que contiene a \(x_m\). Todas las cláusulas a la izquierda de \( A'_m\) tendrán una tercera literal \(z_i = 1\); a su vez, todas las cláusulas a la derecha de \( A'_m\) tendrán una primera literal \(\bar{z_j} = 1\). De este modo, todas las cláusulas de \(A'\) se satisfacen.
+  \end{itemize} 
+\end{proof}
+
+
+
+\end{document}

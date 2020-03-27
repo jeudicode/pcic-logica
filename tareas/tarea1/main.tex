@@ -1,0 +1,227 @@
+\documentclass[letterpaper,12pt]{memoir}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{amsfonts}
+\usepackage{mathptmx}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1.3in]{geometry}
+\usepackage{amsthm}
+\usepackage{marvosym}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage[tableaux]{prooftrees}
+
+\linespread{1.3}
+
+
+\usetikzlibrary{automata, positioning, arrows, fit}
+\tikzset{
+  ->,
+  >=stealth',
+  node distance=2cm,
+  every state/.style={thick},
+  initial text=$ $,
+}
+
+\renewcommand\qedsymbol{\Squarepipe}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definición}[section]
+\newtheorem*{thm}{Teorema}
+
+
+\setlength\parindent{0pt}
+
+\newcounter{paragraphnumber}
+\newcommand{\para}{%
+  \vspace{10pt}\noindent{\bfseries\refstepcounter{paragraphnumber}\theparagraphnumber.\quad}%
+}
+
+\setsecheadstyle{\large\bfseries}
+\setsubsecheadstyle{\bfseries}
+
+\setlength\parindent{0pt}
+
+\pagenumbering{gobble}
+
+%\usepackage[margin=1in]{geometry}
+
+\usepackage{enumitem}
+\setlist{nosep}
+
+\usepackage{xcolor}
+
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks,
+  linkcolor={red!50!black},
+  citecolor={blue!50!black},
+  urlcolor={green!50!black}
+}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\begin{document}
+
+\begin{center}
+  {\large Lógica Computacional}\\
+  \vspace{0.2cm}
+  {\large\bfseries Tarea 1}\\
+  \vspace{0.2cm}
+  {\large PCIC - UNAM}\\
+  \vspace{0.5cm}
+  {\itshape 25 de febrero de 2020}\\
+  \vspace{0.5cm}
+  Diego de Jesús Isla López\\
+  (\href{mailto:dislalopez@gmail.com}{\itshape dislalopez@gmail.com})\\
+  (\href{mailto:diego.isla@comunidad.unam.mx}{\itshape diego.isla@comunidad.unam.mx})\\
+\end{center}
+
+
+\section*{Problema 2.9}
+
+Demostrar:
+
+\begin{equation*}
+  \models ((A \land B) \rightarrow C) \rightarrow ((A \rightarrow C) \lor (B \rightarrow C))  
+\end{equation*}
+
+Esta fórmula puede parecer extraña ya que puede malinterpretarse como decir que si \(C\) se sigue de \(A \land B\), entonces se sigue de \(A\) o de \(B\). Para clarificar esto, mostrar que:
+
+\begin{equation*}
+  \{A \land B \rightarrow C\}  \models (A \rightarrow C) \lor (B \rightarrow C),
+\end{equation*}
+
+pero:
+
+\begin{align*}
+  \{A \land B \rightarrow C\}  &\not\models A \rightarrow C, \\
+  \{A \land B \rightarrow C\}  &\not\models B \rightarrow C,
+\end{align*}
+
+\begin{proof}
+  Por tableau semántico en la negación de la fórmula:\\
+  \noindent
+
+  \begin{tableau}
+    {
+      line no sep= 1.5cm,
+      just sep= 1.5cm,
+      for tree={s sep'=10mm},
+      just refs right, % Set where crossreferences go
+    }
+    [\neg(((A\land B)\rightarrow C) \rightarrow ((A \rightarrow C) \lor (B \rightarrow C))), just={Negación}, name=Prem
+    [(A \land B) \rightarrow C \texttt{,} \neg((A \rightarrow C) \lor (B \rightarrow C )), just={\(\alpha \rightarrow\) }, name=NegConc
+    [(A \land B) \rightarrow C \texttt{,} \neg(A \rightarrow C) \texttt{,} \neg(B \rightarrow C ), just={\(\alpha \rightarrow\)}
+    [(A \land B) \rightarrow C \texttt{,} \neg(A \rightarrow C) \texttt{,} B \texttt{,} \neg C, just={\(\alpha \rightarrow\)},name=Alice
+    [(A \land B) \rightarrow C \texttt{,} A \texttt{,} \neg C \texttt{,} B \texttt{,} \neg C, just={\(\alpha \rightarrow\)}
+    [\neg(A \land B) \texttt{,} A \texttt{,} \neg C \texttt{,} B \texttt{,} \neg C, just={\(\beta \rightarrow\)},name=Bertie
+    [\neg A \texttt{,} A \texttt{,} \neg C \texttt{,} B \texttt{,} \neg C, close, just={\(\beta \rightarrow\)}
+    ]
+    [\neg B \texttt{,} A \texttt{,} \neg C \texttt{,} B \texttt{,} \neg C, close
+    ]
+    ]
+    [C \texttt{,} A \texttt{,} \neg C \texttt{,} B \texttt{,} \neg C, close]
+    ]
+    ]
+    ]
+    ]
+    ]
+  \end{tableau}
+  \newline
+\end{proof}
+
+
+\section*{Problema 3.2}
+
+Demostrar que si \(\vdash U\) en \(\mathcal{G}\) entonces existe un tableau semántico cerrado para \(\bar{U}\). 
+
+\begin{proof}
+
+  Sea \(T\) un tableau semántico (t.s.) para \(U\). Por inducción en la altura \(h\) de \(T\):\\
+
+  Si \(h = 0\), entonces \(U\) consta de un solo par complementario de literales y, por lo tanto, también \(\bar{U}\). Por lo tanto, el tabelau semántico para \(\bar{U}\) es cerrado. \\
+
+  Si \(h > 0\), entonces se aplicó alguna \(\alpha\)-fórmula o \(\beta\)-fórmula en la raíz de \(T\). Se sigue la demostración por casos.\\ 
+
+  \begin{itemize}
+    \item \textbf{Caso 1.} Se aplicó una \(\alpha\)-fórmula como \(A\) tal como \(A_1 \land A_2\) que corresponde a \(A_1, A_2\). Entonces, \(U = U_1 \cup U_2 \cup \{A\}\), donde \(\vdash U_1 \cup \{A_1\}\) y \(\vdash U_2 \cup \{A_2\}\). Por hipótesis de inducción, los complementos \(\bar{U_1} \cup \{\bar{A_1}\}\) y \(\bar{U_2}  \cup \{\bar{A_2}\}\) tienen tableaux cerrados. Por el teorema de robustez (\textit{soundness}) de t.s., estos conjuntos son insatisfactibles. Entonces, se sigue que sus superconjuntos \(\bar{U}' = \bar{U}_1 \cup \bar{U}_2 \cup \{A_1\}\) y \(\bar{U}'' = \bar{U}_1 \cup \bar{U}_2 \cup \{A_2\}\) también son insatisfactibles. Si tomamos \(\bar{A} = \bar{A_1} \lor \bar{A_2}\), podemos ver que constituye una \(\beta\)-fórmula. Por regla de tableau, \(\bar{U}\) se expande en dos hojas \(\bar{U}'\) y \(\bar{U}''\). Dado que ambas hojas son insatisfactibles y tienen tableaux cerrados, \(\bar{U}\) también los tiene.\\
+    \item \textbf{Caso 2.} Se aplicó una  \(\beta\)-fórmula \(B\) tal como \(B_1 \lor B_2\) que corresponde a \(B_1,B_2\). Entonces, \(U = U_1 \cup \{B\}\) donde \(\vdash U' = U_1 \cup \{B_1, B_2\} \). Por hipótesis de inducción, el complemento \(\bar{U}' = \bar{U}_1 \cup \{B_1, B_2\}\) tiene un tableau cerrado. Tomando \(\bar{B} = \bar{B_1} \land \bar{B_2}\), vemos que corrrsponde a una \(\alpha\)-fórmula. Por regla de tableau, se expande \(\bar{U}\) a \(\bar{U}'\). Dado que \(\bar{U}'\) tiene un tableau cerrado, \(\bar{U}\) también lo tiene.
+  \end{itemize}
+  
+\end{proof}
+
+\section*{Problema 3.9}
+
+Demostrar en  \(\mathcal{H}\):
+
+\begin{align*}
+    \vdash A & \rightarrow  A \lor B, \\
+    \vdash B & \rightarrow A \lor B, \\
+    \vdash (A \rightarrow B) & \rightarrow ((C \lor A) \rightarrow (C \lor B))
+\end{align*}
+
+\begin{proof}
+  Por reglas de Hilbert:\\
+  \noindent
+
+  \begin{align*}
+    1. &  & \{A \rightarrow B, \neg C \rightarrow A, \neg C \} &\vdash \neg C \rightarrow A & & \text{Suposición}\\
+    2. & & \{A \rightarrow B, \neg C \rightarrow A, \neg C \} &\vdash \neg C & & \text{Suposición}\\ 
+    3. & & \{A \rightarrow B, \neg C \rightarrow A, \neg C \} &\vdash A & & \text{M.P. 1,2}\\
+    4. & & \{A \rightarrow B, \neg C \rightarrow A, \neg C \} &\vdash A \rightarrow B & & \text{Suposición}\\
+    5. & & \{A \rightarrow B, \neg C \rightarrow A, \neg C \} &\vdash B & & \text{M.P. 3,4}\\
+    6. & & \{A \rightarrow B, \neg C \rightarrow A\} &\vdash \neg C \rightarrow B & & \text{Deducción en 5}\\
+    7. & & \{A \rightarrow B\} &\vdash (C \lor A) \rightarrow (C \lor B) & & \text{Deducción en 6}\\
+  \end{align*}
+\end{proof}
+
+\section*{Problema 3.12}
+
+Demostrar que el axioma 2 de \(\mathcal{H}\) es válido construyendo un tableau semántico para su negación.
+
+\begin{proof}
+  Por tableau semántico en la negación de la fórmula:\\
+  \noindent
+
+  \begin{tableau}
+    {
+      line no sep= 0.5cm,
+      just sep= 0.5cm,
+      for tree={s sep'=1mm},
+      just refs right, % Set where crossreferences go
+    }
+    [\neg((A \rightarrow (B \rightarrow C)) \rightarrow ((A \rightarrow B) \rightarrow (A \rightarrow C))), just={Negación}, name=Prem
+    [A \rightarrow (B \rightarrow C) \text{,} \neg ((A \rightarrow B) \rightarrow (A \rightarrow C)), just={\(\alpha \rightarrow\) }, name=NegConc
+    [A \rightarrow (B \rightarrow C) \text{,} A \rightarrow B \text{,} \\ \neg(A \rightarrow C), just={\(\alpha \rightarrow\)}
+    [A \rightarrow (B \rightarrow C) \text{,} A \rightarrow B \text{,} A \text{,} \neg C, just={\(\alpha \rightarrow\)},name=Alice
+    [\neg A \text{,} A \rightarrow (B \rightarrow C) \text{,} A\text{,} \neg C , just={\(\beta \rightarrow\)},name=Bertie
+    [\neg A \text{,} \neg A  \text{,} A  \text{,} \neg C, close, just={\(\beta \rightarrow\)}
+    ]
+    [B \rightarrow C \text{,} \neg A  \text{,} A  \text{,} \neg C
+    [\neg B \text{,} \neg A \text{,} A \text{,} \neg C, close, just={\(\beta \rightarrow\)}
+    ]
+    [C \text{,} \neg A \text{,} A \text{,} \neg C, close
+    ]
+    ]
+    ]
+    [B \text{,} A \rightarrow (B \rightarrow C) \text{,} A\text{,} \neg C
+    [B \text{,} \neg A \text{,} A \text{,} \neg C , close , just={\(\beta \rightarrow\)},name=Bertiex
+    ]
+    [B \rightarrow C \text{,} \neg A \text{,} A \text{,} \neg C
+    [\neg B \text{,} B \text{,} A \text{,} \neg C, close, just={\(\beta \rightarrow\)}
+    ]
+    [C \text{,} B \text{,} A \text{,} \neg C, close
+    ]
+    ]
+    ]
+    ]
+    ]
+    ]
+    ]
+  \end{tableau}
+  \newline
+\end{proof}
+
+\end{document}

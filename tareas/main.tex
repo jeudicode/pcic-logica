@@ -1,0 +1,79 @@
+\documentclass[letterpaper,12pt]{memoir}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{amsfonts}
+
+\usepackage{mathptmx}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1.3in]{geometry}
+\usepackage{amsthm}
+\usepackage{marvosym}
+\usepackage{bm}
+
+\renewcommand\qedsymbol{\Squarepipe}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definición}[section]
+\newtheorem*{thm}{Teorema}
+
+
+\setlength\parindent{0pt}
+
+\newcounter{paragraphnumber}
+\newcommand{\para}{%
+  \vspace{10pt}\noindent{\bfseries\refstepcounter{paragraphnumber}\theparagraphnumber.\quad}%
+}
+
+\setsecheadstyle{\large\bfseries}
+\setsubsecheadstyle{\bfseries}
+
+\setlength\parindent{0pt}
+
+\pagenumbering{gobble}
+
+\usepackage[margin=1in]{geometry}
+
+\usepackage{enumitem}
+\setlist{nosep}
+
+\usepackage{xcolor}
+
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks,
+  linkcolor={red!50!black},
+  citecolor={blue!50!black},
+  urlcolor={green!50!black}
+}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\begin{document}
+
+\begin{center}
+  {\large Lógica Computacional}\\
+  \vspace{0.2cm}
+  {\large\bfseries Tarea 1}\\
+  \vspace{0.2cm}
+  {\large PCIC - UNAM}\\
+  \vspace{0.5cm}
+  {\itshape 11 de febrero de 2020}\\
+  \vspace{0.5cm}
+  Diego de Jesús Isla López\\
+  (\href{mailto:dislalopez@gmail.com}{\itshape dislalopez@gmail.com})\\
+  (\href{mailto:diego.isla@comunidad.unam.mx}{\itshape diego.isla@comunidad.unam.mx})\\
+\end{center}
+
+\begin{thm}
+    Sea $I$ una interepretación. Entonces, $v_I(A_1 \wedge A_2 \wedge A_3 \wedge ... \wedge A_n) = 1$ sii $v_I(A_i) = 1$ para $i = 1 ... n$.
+\end{thm}
+
+\begin{proof}
+    Supongamos que $A_i = 0$, para alguna $i = 1 ... n$. Sabemos por la tabla de verdad de la función $AND$ que $A \wedge B = 0$ si el valor de alguno de los operandos es $0$. De este modo, si hacemos la conjunción entre $A_i$ y $A_{i+1} ... A_n$, el resultado siempre será $0$.\\
+
+    Supongamos ahora que $v_I(A_i) = 1$ para toda $i = 1 ... n$ y $v_I(A_1 \wedge A_2 \wedge A_3 \wedge ... \wedge A_n) = 1$. Supongamos para fines de contradicción que $v_I(A_1 \wedge A_2 \wedge A_3 \wedge ... \wedge A_n) = 0$. Esto implica que algún valor de $A_i = 0$, pero esto es una contradicción ya que sabemos que todos los $A_i = 1$.
+\end{proof}
+
+
+\end{document}
