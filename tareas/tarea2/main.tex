@@ -80,84 +80,84 @@
 \end{center}
 
 
-% \section*{Problema 4.3}
+\section*{Problema 4.3}
 
-% Simplificar los siguientes conjuntos de cláusulas. Esto es, para cada conjunto \(S\), encontrar un conjunto más simple \(S'\) tal que  \(S'\) es satisfactible sii  \(S\) es satisfactible.
+Simplificar los siguientes conjuntos de cláusulas. Esto es, para cada conjunto \(S\), encontrar un conjunto más simple \(S'\) tal que  \(S'\) es satisfactible sii  \(S\) es satisfactible.
 
-% \begin{enumerate}
-%   \item \(p\bar{q}, q\bar{r}, rs, p\bar{s}\):
-%     \begin{align*}
-%       &=  p \bar{r}, rs, p \bar{s}\\
-%       &=  ps, p \bar{s}\\
-%       &=  p
-%     \end{align*}
-%   \item \(pqr, \bar{q}, p\bar{r}s, qs, p\bar{s}\):
-%     \begin{align*}
-%       &=  pr, p\bar{r}s, qs, p\bar{s}\\
-%       &=  ps, qs, p\bar{s}\\
-%       &=  p, qs
-%     \end{align*}
-%   \item \(pqrs, \bar{q}rs, \bar{p}rs, qs, \bar{p}s\):
-%     \begin{align*}
-%       &=  prs, \bar{p}rs, qs, \bar{p}s\\
-%       &= rs, qs, \bar{p}s
-%     \end{align*}
-%   \item \(pq, qrs, \bar{p}\bar{q}rs, \bar{r}, q\):
-%   \begin{align*}
-%     &= pq, qrs, \bar{p}rs, \bar{r}\\
-%     &=  pq, qrs, \bar{p}s\\
-%     &=  qs, qrs
-%   \end{align*}
-% \end{enumerate}
-
-
-% \section*{Problema 4.4}
-
-% Dado el conjunto de cláusulas \(\{\bar{p}\bar{q}r, pr, qr, \bar{r} \}\), construir dos refutaciones: una resolviendo las literales en el orden \(\{p, q, r\}\) y otra en el orden \(\{r, q, p\}\).\\
-
-% \begin{enumerate}
-%   \item \(\{\bar{p}\bar{q}r (1), pr (2), qr (3), \bar{r} (4) \}\):
-%     \begin{align*}
-%       5. & \bar{q}r & 1,2\\
-%       6. & r & 3,5\\
-%       7. & \square & 4,6 
-%     \end{align*}
-%   \item \(\{\bar{r} (1), r\bar{q}\bar{p} (2), rp (3), rq(4)\}\):
-%   \begin{align*}
-%     5. & \bar{q}\bar{p} & 1,2\\
-%     6. & p & 1,3\\
-%     7. & q & 1,4\\
-%     8. & \bar{p} & 5,7\\
-%     9. & \square & 6,8
-%   \end{align*}
-% \end{enumerate}
+\begin{enumerate}
+  \item \(p\bar{q}, q\bar{r}, rs, p\bar{s}\):
+    \begin{align*}
+      &=  p \bar{r}, rs, p \bar{s}\\
+      &=  ps, p \bar{s}\\
+      &=  p
+    \end{align*}
+  \item \(pqr, \bar{q}, p\bar{r}s, qs, p\bar{s}\):
+    \begin{align*}
+      &=  pr, p\bar{r}s, qs, p\bar{s}\\
+      &=  ps, qs, p\bar{s}\\
+      &=  p, qs
+    \end{align*}
+  \item \(pqrs, \bar{q}rs, \bar{p}rs, qs, \bar{p}s\):
+    \begin{align*}
+      &=  prs, \bar{p}rs, qs, \bar{p}s\\
+      &= rs, qs, \bar{p}s
+    \end{align*}
+  \item \(pq, qrs, \bar{p}\bar{q}rs, \bar{r}, q\):
+  \begin{align*}
+    &= pq, qrs, \bar{p}rs, \bar{r}\\
+    &=  pq, qrs, \bar{p}s\\
+    &=  qs, qrs
+  \end{align*}
+\end{enumerate}
 
 
+\section*{Problema 4.4}
 
-% \section*{Problema 4.5}
+Dado el conjunto de cláusulas \(\{\bar{p}\bar{q}r, pr, qr, \bar{r} \}\), construir dos refutaciones: una resolviendo las literales en el orden \(\{p, q, r\}\) y otra en el orden \(\{r, q, p\}\).\\
 
-% Transformar el conjunto de fórmulas \(\{p, p \rightarrow ((q \lor r)\land \neg(q \land r)), p \rightarrow ((s \lor t) \land \neg (s \land t)), s \rightarrow q, \neg r \rightarrow t, t \rightarrow s  \}\) a CNF y refutarla usando resolución.\\ 
+\begin{enumerate}
+  \item \(\{\bar{p}\bar{q}r (1), pr (2), qr (3), \bar{r} (4) \}\):
+    \begin{align*}
+      5. & \bar{q}r & 1,2\\
+      6. & r & 3,5\\
+      7. & \square & 4,6 
+    \end{align*}
+  \item \(\{\bar{r} (1), r\bar{q}\bar{p} (2), rp (3), rq(4)\}\):
+  \begin{align*}
+    5. & \bar{q}\bar{p} & 1,2\\
+    6. & p & 1,3\\
+    7. & q & 1,4\\
+    8. & \bar{p} & 5,7\\
+    9. & \square & 6,8
+  \end{align*}
+\end{enumerate}
 
-% Haciendo la transformación, tenemos:
 
-% \begin{equation*}
-%   \{p(1), \bar{p}qr(2), \bar{p}\bar{q}\bar{r}(3), \bar{p}st(4), \bar{p}\bar{s}\bar{t}(5), \bar{s}q(6), rt(7), \bar{t}s(8) \}
-% \end{equation*}
 
-% Aplicando el algoritmo:\\
+\section*{Problema 4.5}
 
-% \begin{align*}
-%    9. & st & 1,4\\
-%    10. & s & 8,9 \\
-%    11. & q & 10,6\\
-%    12. & qr & 1,2\\
-%    13. & \bar{q}\bar{r} & 1,3\\
-%    14. & \bar{s}\bar{t} & 1,5\\
-%    15. & \bar{t} & 14,8\\
-%    16. & r & 15,7\\
-%    17. & \bar{q} & 16,13\\
-%    18. & \square & 11,17
-% \end{align*}
+Transformar el conjunto de fórmulas \(\{p, p \rightarrow ((q \lor r)\land \neg(q \land r)), p \rightarrow ((s \lor t) \land \neg (s \land t)), s \rightarrow q, \neg r \rightarrow t, t \rightarrow s  \}\) a CNF y refutarla usando resolución.\\ 
+
+Haciendo la transformación, tenemos:
+
+\begin{equation*}
+  \{p(1), \bar{p}qr(2), \bar{p}\bar{q}\bar{r}(3), \bar{p}st(4), \bar{p}\bar{s}\bar{t}(5), \bar{s}q(6), rt(7), \bar{t}s(8) \}
+\end{equation*}
+
+Aplicando el algoritmo:\\
+
+\begin{align*}
+   9. & st & 1,4\\
+   10. & s & 8,9 \\
+   11. & q & 10,6\\
+   12. & qr & 1,2\\
+   13. & \bar{q}\bar{r} & 1,3\\
+   14. & \bar{s}\bar{t} & 1,5\\
+   15. & \bar{t} & 14,8\\
+   16. & r & 15,7\\
+   17. & \bar{q} & 16,13\\
+   18. & \square & 11,17
+\end{align*}
 
 
 \section*{Problema 4.13}
