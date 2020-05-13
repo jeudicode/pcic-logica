@@ -1,8 +1,6 @@
 class Node:
 
-    def __init__(self, id, var, low=NULL, high=NULL):
-        self.id = id
-        self.i = 5
+    def __init__(self, label=None, low=None, high=None):
+        self.label = label
         self.low = low
         self.high = high
-
