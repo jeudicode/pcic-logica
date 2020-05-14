@@ -217,10 +217,8 @@ class BDD:
                         if b1.low.label in [0, 1]:  # if no more subtrees
                             if op == "+":
                                 res_low = b1.low.label or b2.label
-                                #res_high = b1.high.label or b2.label
                             elif op == "x":
                                 res_low = b1.low.label and b2.label
-                                #res_high = b1.high.label and b2.label
 
                             if res_low == 1:
                                 n.low = self.ter_T
@@ -232,10 +230,8 @@ class BDD:
                         if b1.high.label in [0, 1]:  # if no more subtrees
                             if op == "+":
                                 res_high = b1.high.label or b2.label
-                                #res_high = b1.high.label or b2.label
                             elif op == "x":
                                 res_high = b1.high.label and b2.label
-                                #res_high = b1.high.label and b2.label
 
                             if res_high == 1:
                                 n.high = self.ter_T
@@ -252,10 +248,8 @@ class BDD:
                         if b2.low.label in [0, 1]:  # if no more subtrees
                             if op == "+":
                                 res_low = b2.low.label or b1.label
-                                #res_high = b1.high.label or b2.label
                             elif op == "x":
                                 res_low = b2.low.label and b1.label
-                                #res_high = b1.high.label and b2.label
 
                             if res_low == 1:
                                 n.low = self.ter_T
@@ -267,10 +261,8 @@ class BDD:
                         if b2.high.label in [0, 1]:  # if no more subtrees
                             if op == "+":
                                 res_high = b2.high.label or b1.label
-                                #res_high = b1.high.label or b2.label
                             elif op == "x":
                                 res_high = b2.high.label and b1.label
-                                #res_high = b1.high.label and b2.label
 
                             if res_high == 1:
                                 n.high = self.ter_T
