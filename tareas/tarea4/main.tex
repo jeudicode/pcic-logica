@@ -1,0 +1,238 @@
+\documentclass[letterpaper,12pt]{memoir}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{amsfonts}
+\usepackage{mathptmx}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1.3in]{geometry}
+\usepackage{amsthm}
+\usepackage{marvosym}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage[tableaux]{prooftrees}
+
+\linespread{1.3}
+
+
+\usetikzlibrary{automata, positioning, arrows, fit}
+\tikzset{
+  ->,
+  >=stealth',
+  node distance=2cm,
+  every state/.style={thick},
+  initial text=$ $,
+}
+
+\renewcommand\qedsymbol{\Squarepipe}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definición}[section]
+\newtheorem*{thm}{Teorema}
+
+
+\setlength\parindent{0pt}
+
+\newcounter{paragraphnumber}
+\newcommand{\para}{%
+  \vspace{10pt}\noindent{\bfseries\refstepcounter{paragraphnumber}\theparagraphnumber.\quad}%
+}
+
+\setsecheadstyle{\large\bfseries}
+\setsubsecheadstyle{\bfseries}
+
+\setlength\parindent{0pt}
+
+\pagenumbering{gobble}
+
+%\usepackage[margin=1in]{geometry}
+
+\usepackage{enumitem}
+\setlist{nosep}
+
+\usepackage{xcolor}
+
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks,
+  linkcolor={red!50!black},
+  citecolor={blue!50!black},
+  urlcolor={green!50!black}
+}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\begin{document}
+
+\begin{center}
+  {\large Lógica Computacional}\\
+  \vspace{0.2cm}
+  {\large\bfseries Tarea 4}\\
+  \vspace{0.2cm}
+  {\large PCIC - UNAM}\\
+  \vspace{0.5cm}
+  {\itshape 14 de abril de 2020}\\
+  \vspace{0.5cm}
+  Diego de Jesús Isla López\\
+  (\href{mailto:dislalopez@gmail.com}{\itshape dislalopez@gmail.com})\\
+  (\href{mailto:diego.isla@comunidad.unam.mx}{\itshape diego.isla@comunidad.unam.mx})\\
+\end{center}
+
+
+\section*{Problema 7.9}
+
+Demostrar que \( (\forall xp(x) \rightarrow \forall xq(x)) \rightarrow \forall x (p(x) \rightarrow q(x))  \) no es válida construyendo un tableau semántico para su negación.
+
+\begin{proof}
+  Por tableau semántico:\\
+  \noindent
+
+  \begin{tableau}
+    {
+      line no sep= 1.5cm,
+      just sep= 1.5cm,
+      for tree={s sep'=10mm},
+      just refs right, % Set where crossreferences go
+    }
+    [\neg((\forall xp(x) \rightarrow \forall xq(x)) \rightarrow \forall x (p(x) \rightarrow q(x))), just={Negación}, name=Prem
+    [(\forall xp(x) \rightarrow \forall xq(x)) \texttt{,} \neg(\forall x (p(x) \rightarrow q(x)), just={\(\alpha \rightarrow\) }, name=NegConc
+    [(\forall xp(x) \rightarrow \forall xq(x)) \texttt{,} \neg(p(a_1)\rightarrow q(a_1)), just={\(\delta \forall\)}
+    [\neg \forall xp(x) \texttt{,} \neg(p(a_1) \rightarrow q(a_1)), just={\(\alpha \rightarrow\)},name=Bertie
+    [\neg p(a_2) \texttt{,} p(a_1) \texttt{,} \neg q(a_1), just={\(\delta \forall\)}
+    ]
+    ]
+    [
+      \forall xq(x) \texttt{,} \neg(p(a_1) \rightarrow q(a_1), just={}
+      [\forall xq(x) \texttt{,} q(a_1) \texttt{,} p(a_1) \texttt{,} \neg q(a_1) , close, just={\(\gamma \forall\)}
+    ]
+    ]
+    ]
+    ]
+    ]
+  \end{tableau}
+  \newline
+
+  El tableau tiene una rama abierta por lo que no es cerrado, por lo que se sigue que la fórmula no es válida.
+\end{proof}
+
+
+\section*{Problema 8.3}
+
+Demostrar que los axiomas 4 y 5 son válidos.\\
+
+\textbf{Axioma 4.} \(\vdash \forall xA(X) \rightarrow A(a)\)
+
+\begin{proof}
+Por tableau semántico en la negación de la fórmula:\\
+\begin{tableau}
+  {
+    line no sep= 1.5cm,
+    just sep= 1.5cm,
+    for tree={s sep'=10mm},
+    just refs right, % Set where crossreferences go
+  }
+  [
+    \neg(\forall xA(x) \rightarrow A(a)), just={Negación}
+    [\forall xA(x) \texttt{,} \neg A(a), just={\(\alpha \rightarrow\)}
+      [\forall xA(x) \texttt{,} A(a) \texttt{,} \neg A(a), close, just={\(\gamma \forall\)}]
+    ]
+  ]
+\end{tableau}
+\newline
+El tableau es cerrado, por lo que la fórmula es válida.
+\end{proof}
+
+\textbf{Axioma 5.} \(\vdash \forall x(A \rightarrow B(x)) \rightarrow (A \rightarrow \forall xB(x))\)
+
+\begin{proof}
+  Por tableau semántico en la negación de la fórmula:\\
+  \newline
+  \begin{tableau}
+    {
+      line no sep= 1.5cm,
+      just sep= 1.5cm,
+      for tree={s sep'=10mm},
+      just refs right, % Set where crossreferences go
+    }
+    [
+     \neg(\forall x(A \rightarrow B(x)) \rightarrow (A \rightarrow \forall xB(x))),just={Negación}
+    [\forall x(A \rightarrow B(x)) \texttt{,} \neg(A \rightarrow \forall xB(x)),just={\(\alpha \rightarrow\)}
+    [\forall x(A \rightarrow B(x)) \texttt{,} A \texttt{,} \neg \forall xB(x),just={\(\alpha \rightarrow\)}
+      [\forall x(A \rightarrow B(x)) \texttt{,} A \texttt{,} \neg B(a_1),just={\(\delta \forall\)}
+        [(A \rightarrow \forall xB(x)) \texttt{,} A \texttt{,} \neg B(a_1),just={Distributividad de \(\forall\)}
+        [\neg A \texttt{,} A \texttt{,} \neg A(a_1), close,just={\(\beta \rightarrow\)}]
+        [\forall xB(x) \texttt{,} A \texttt{,} \neg B(a_1),just={\(\beta \rightarrow\)}
+        [\forall xB(x) \texttt{,} B(a_1) \texttt{,} A \texttt{,} \neg B(a_1),close, just={\(\gamma \forall\)}]
+        ]
+        ]
+      ]
+    ]
+    ]
+    ]
+  \end{tableau}
+  \newline
+  El tableau resulta cerrado, por lo que la fórmula es válida.
+\end{proof}
+
+
+\section*{Problema 8.8}
+
+Demostrar el teorema 8.19 en \(H\).\\
+\newline
+
+\textbf{Teorema 8.19} Sea \(A\) una fórmula que no tiene \(x\) como variable libre:
+\begin{align}
+  \vdash \forall x(A \rightarrow B(x)) & \leftrightarrow (A \rightarrow \forall xB(x)),\\
+  \vdash \exists x(A \rightarrow B(x)) & \leftrightarrow  (A \rightarrow \exists xB(x))
+\end{align}
+
+
+
+\begin{proof}
+  Para (1) tenemos: \\
+
+  \begin{itemize}
+    \item \(\forall (A \rightarrow B(x)) \rightarrow (A \rightarrow \forall xB(x))\)
+    \begin{align*}
+      1. & & \forall (A \rightarrow B(x)) &\vdash \forall (A \rightarrow B(x)) & & \texttt{Sup.}  \\
+      2. & & \forall (A \rightarrow B(x)) &\vdash \forall (\neg A \lor B(x)) & & \texttt{Def. implicación}\\
+      3. & &  \forall (A \rightarrow B(x)) &\vdash \neg A \lor \forall xB(x) & & \texttt{Distributividad} \\
+      4. & &  \forall (A \rightarrow B(x)) &\vdash A \rightarrow \forall xB(x) & & \texttt{Def. implicación} \\
+      5. & & \forall (A \rightarrow B(x)) &\rightarrow (A \rightarrow \forall xB(x)) & & \texttt{Deducción} 
+    \end{align*}
+    \item \( (A \rightarrow \forall xB(x)) \rightarrow \forall (A \rightarrow B(x)) \)
+    \begin{align*}
+      1. & & A \rightarrow \forall xB(x) &\vdash A \rightarrow \forall xB(x) & &  \texttt{Sup.}  \\
+      2. & & A \rightarrow \forall xB(x) &\vdash \neg A \lor \forall xB(c)  & & \texttt{Def. implicación}\\
+      3. & & A \rightarrow \forall xB(x) &\vdash \forall x(\neg A \lor B(x)) & & \texttt{Distributividad} \\
+      4. & & A \rightarrow \forall xB(x) &\vdash \forall x(A \rightarrow B(x)) & & \texttt{Def. implicación} \\
+      5. & & (A \rightarrow \forall xB(x)) &\rightarrow \forall x(A \rightarrow B(x)) & & \texttt{Deducción} 
+    \end{align*}
+  \end{itemize}
+
+
+  Para (2) tenemos: \\
+
+  \begin{itemize}
+    \item \( \exists (A \rightarrow B(x)) \rightarrow (A \rightarrow \exists xB(x)) \)
+    \begin{align*}
+      1. & & \exists (A \rightarrow B(x)) &\vdash \exists (A \rightarrow B(x)) & & \texttt{Sup.} \\
+      2. & & \exists (A \rightarrow B(x)) &\vdash A \rightarrow B(a) & & \texttt{Regla C} \\
+      3. & &  \exists (A \rightarrow B(x)) &\vdash A \rightarrow \exists xB(x) & & \texttt{Teorema 8.14} \\
+      4. & & \exists (A \rightarrow B(x)) &\rightarrow (A \rightarrow \exists xB(x)) & & \texttt{Deduccion}
+    \end{align*}
+    \item \( (A \rightarrow \exists xB(x)) \rightarrow \exists (A \rightarrow B(x)) \)
+    \begin{align*}
+      1. & & (A \rightarrow \exists xB(x)) &\vdash (A \rightarrow \exists xB(x)) & & \texttt{Sup.} \\
+      2. & & (A \rightarrow \exists xB(x)) &\vdash \neg A \lor \exists xB(c)  & & \texttt{Def. implicación}\\
+      3. & &  (A \rightarrow \exists xB(x)) &\vdash \exists x(\neg A \lor B(x)) & & \texttt{Distributividad} \\
+      4. & & (A \rightarrow \exists xB(x)) &\vdash \exists x(A \rightarrow B(x)) & & \texttt{Def. implicación} \\
+      5. & & (A \rightarrow \exists xB(x)) &\rightarrow \exists x(A \rightarrow B(x)) & & \texttt{Deducción} 
+    \end{align*}
+
+
+
+  \end{itemize}
+\end{proof}
+
+\end{document}

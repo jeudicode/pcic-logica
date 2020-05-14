@@ -1,0 +1,153 @@
+\documentclass[letterpaper,12pt]{memoir}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{amsfonts}
+\usepackage{mathptmx}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1.3in]{geometry}
+\usepackage{amsthm}
+\usepackage{marvosym}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage[tableaux]{prooftrees}
+
+\linespread{1.3}
+
+
+\usetikzlibrary{automata, positioning, arrows, fit}
+\tikzset{
+  ->,
+  >=stealth',
+  node distance=2cm,
+  every state/.style={thick},
+  initial text=$ $,
+}
+
+\renewcommand\qedsymbol{$\blacksquare$}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definición}[section]
+\newtheorem*{thm}{Teorema}
+\newtheorem*{solution}{Solución}
+\newtheorem*{lem}{Lema}
+
+\setlength\parindent{0pt}
+
+\newcounter{paragraphnumber}
+\newcommand{\para}{%
+  \vspace{10pt}\noindent{\bfseries\refstepcounter{paragraphnumber}\theparagraphnumber.\quad}%
+}
+
+\setsecheadstyle{\large\bfseries}
+\setsubsecheadstyle{\bfseries}
+
+\setlength\parindent{0pt}
+
+\pagenumbering{gobble}
+
+%\usepackage[margin=1in]{geometry}
+
+\usepackage{enumitem}
+\setlist{nosep}
+
+\usepackage{xcolor}
+
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks,
+  linkcolor={red!50!black},
+  citecolor={blue!50!black},
+  urlcolor={green!50!black}
+}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\begin{document}
+
+\begin{center}
+  {\large Lógica Computacional}\\
+  \vspace{0.2cm}
+  {\large\bfseries Examen 1}\\
+  \vspace{0.2cm}
+  {\large PCIC - UNAM}\\
+  \vspace{0.5cm}
+  {\itshape 20 de abril de 2020}\\
+  \vspace{0.5cm}
+  Diego de Jesús Isla López\\
+  (\href{mailto:dislalopez@gmail.com}{\itshape dislalopez@gmail.com})\\
+  (\href{mailto:diego.isla@comunidad.unam.mx}{\itshape diego.isla@comunidad.unam.mx})\\
+\end{center}
+
+
+\section*{Problema 1}
+
+Demostrar que \( \vdash  (A \rightarrow B) \lor (B \rightarrow C) \) en el sistema de Hilbert \(\mathcal{H}\).
+
+
+\begin{proof}
+  \begin{align*}
+    1. & & \neg(A \rightarrow B) &\rightarrow \neg(A \rightarrow B ) & & \texttt{Sup.}  \\
+    2. & &  \neg(A \rightarrow B) &\vdash A \rightarrow \neg B  & & \texttt{Def. implicación (1)} \\
+    3. & &  \neg(A \rightarrow B) &\vdash \neg B \rightarrow (B \rightarrow C)  & & \texttt{Teorema 3.20} \\
+    4. & &  \neg(A \rightarrow B) &\vdash A \rightarrow (B \rightarrow C)  & & \texttt{Transitividad (2,3)} \\
+    5. & &  \neg(A \rightarrow B) &\rightarrow (A \rightarrow (B \rightarrow C))  & & \texttt{Deducción (4)} \\
+    6. & &  (A \rightarrow B) &\lor (A \rightarrow (B \rightarrow C))  & & \texttt{Def. implicación (5)} \\
+    7. & &  (\neg A \lor B) &\lor (\neg A \lor (\neg B \lor C))  & & \texttt{Def. implicación (6)} \\
+    8. & &  \neg A \lor B &\lor \neg A \lor \neg B \lor C  & & \texttt{Def. (\lor\) (7)} \\
+    9. & &  (\neg A \lor B) &\lor (\neg B \lor C ) & & \texttt{Def. \(\lor\) (8)} \\
+    10. & &  (A \rightarrow B) &\lor (B \rightarrow C ) & & \texttt{Def. implicación (9)} 
+  \end{align*}
+\end{proof}
+
+
+\section*{Problema 2}
+
+Calcular la expansión de Shannon de \( (p \rightarrow (q \rightarrow r)) \rightarrow ((p \rightarrow q) \rightarrow (p \rightarrow r))  \) con respecto a su proposición atómica \(r\). ¿Por qué usted sabe la respuesta aún antes de comenzar los cálculos?
+
+\begin{solution}
+  Tomando \(A = p \rightarrow (q \rightarrow r) \) y \(B = (p \rightarrow q) \rightarrow (p \rightarrow r)\) tenemos las siguientes restricciones:
+  \begin{align*}
+    A|_{r = T} &= p \rightarrow (q \rightarrow T) \equiv p \rightarrow T \equiv T \\
+    B|_{r = T} &= (p \rightarrow q) \rightarrow p \equiv p \\
+    A|_{r = F} &= p \rightarrow (q \rightarrow F) \equiv p \rightarrow \neg q \equiv \neg (p \land q) \\
+    B|_{r = F} &= (p \rightarrow q) \rightarrow (p \rightarrow F) \equiv (p \rightarrow q) \rightarrow \neg p \equiv \neg (p \land q)\\
+  \end{align*}
+
+  Desarrollando la expansión de Shannon tenemos:
+
+  \begin{align*}
+    [p \land (T \rightarrow p)] &\lor [\neg p \land (\neg (p \land q) \rightarrow \neg (p \land q))] \\
+    (p \land p) &\lor (\neg p \land T) \\
+    p &\lor \neg p \\
+    T &
+  \end{align*} 
+
+  Podemos saber la solución sin hacer la expansión ya que la fórmula es consistente con el axioma 2 de Hilbert.
+
+\end{solution}
+
+\section*{Problema 3}
+
+Demostrar que si el conjunto de cláusulas que etiquetan a las hojas de un árbol de resolución es satisfactible, entonces la cláusula que etiqueta a la raíz es satisfactible.
+
+\begin{lem}
+  El resolvente \(C\) es satisfactible sii las cláusulas padre \(C_1\) y \(C_2\) son ambas satisfactibles.
+\end{lem}
+
+\begin{proof}
+  Por construcción del árbol de resolución, la raíz tiene como etiqueta al resolvente \(C\) de las cláusulas \(C_1\) y \(C_2\)  en sus hojas. Por el lema anterior, \(C\) es satisfactible sii las cláusulas padre \(C_1\) y \(C_2\) son ambas satisfactibles.
+\end{proof}
+
+
+\section*{Problema 4}
+
+Sea \(A\) una fórmula construida solo con cuantificadores y los operadores booleanos \(\neg\), \(\lor\) y \(\land\). La forma dual de \(A\), \(A'\), se obtiene intercambiando \(\forall\) con \(\exists\) y \(\lor\) con \(\land\). Demostrar que \(\vdash A\) sii \(\vdash \neg A'\).
+
+\begin{proof}
+  Por construcción de \(A'\), es posible ver que \(\neg A'\) siempre será la fórmula \(A\) original pero con una distribución contraria de signos \(\neg\). De este modo, si desarrollamos tableaux semánticos \(T\) y \(T'\) para \(A\) y \(A'\) respectivamente, podemos observar que ambos tableaux tienen exactamente las mismas aplicaciones de las reglas de construcción. A su vez, se llegarán a los mismos conjuntos de literales y fórmulas \(\gamma\) en ambos casos. Teniendo esto en cuenta, se sigue que si \(T\) es un árbol abierto, \(T'\) también lo será; de igual manera si \(T\) es un árbol cerrado, \(T'\) también lo será.\\
+
+  El caso opuesto es análogo.
+\end{proof}
+
+\end{document}
