@@ -1,7 +1,6 @@
 from bdd import BDD
 import sys
 
-operators = ["+", "&", "!"]
 
 if len(sys.argv) == 5:
     f1 = sys.argv[1]
@@ -16,14 +15,25 @@ if len(sys.argv) == 5:
     #         print(sym)
 
     b1 = BDD(f1, order)
-    print(b1.formula)
+    print("Formula for B1: ", b1.formula)
+    print("\nOriginal B1:\n")
+    b1._print()
     # print(b1.a)
     b2 = BDD(f2, order)
-    print(b2.formula)
+    print("Formula for B2: ", b2.formula)
+    print("\nOriginal B2:\n")
+    b2._print()
+    b1._reduce()
+    print("\nReducing B1:\n")
+    b1._print()
+    print("\nReducing B2:\n")
+    b2._reduce()
+    b2._print()
     # print(b2.a)
-    # b2 = BDD(f2)
-    # res = b1.apply(op, b2)
-    # print(res)
+    print("\nApplying B1 " + op + " B2:\n")
+    result = BDD(None, None, b1.apply(b1.root, b2.root, op))
+    result._reduce()
+    result._print()
 else:
     sys.exit("Not enough arguments.")
 
