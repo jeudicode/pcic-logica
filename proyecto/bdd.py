@@ -176,9 +176,6 @@ class BDD:
         if b1 == None:
             b1 = self.root
 
-        print("b1: ", b1.label)
-        print("b2: ", b2.label)
-
         if b1.label in [0, 1] and b2.label in [0, 1]:
             # both are terminals
             if op == "+":
@@ -210,51 +207,77 @@ class BDD:
                             n = Node(b1.label)
                             n.low = self.apply(b1.low, b2, op)
                             n.high = self.apply(b1.high, b2, op)
-                        else:
+                        elif i1 > i2:
                             n = Node(b2.label)
                             n.low = self.apply(b2.low, b1, op)
                             n.high = self.apply(b2.high, b1, op)
                     else:
                         # b2 is terminal
                         n = Node(b1.label)
-                        if op == "+":
-                            res_low = b1.low.label or b2.label
-                            res_high = b1.high.label or b2.label
-                        elif op == "x":
-                            res_low = b1.low.label and b2.label
-                            res_high = b1.high.label and b2.label
+                        if b1.low.label in [0, 1]:  # if no more subtrees
+                            if op == "+":
+                                res_low = b1.low.label or b2.label
+                                #res_high = b1.high.label or b2.label
+                            elif op == "x":
+                                res_low = b1.low.label and b2.label
+                                #res_high = b1.high.label and b2.label
 
-                        if res_low == 1:
-                            n.low = self.ter_T
+                            if res_low == 1:
+                                n.low = self.ter_T
+                            else:
+                                n.low = self.ter_F
                         else:
-                            n.low = self.ter_F
+                            n.low = self.apply(b2, b1.low, op)
 
-                        if res_high == 1:
-                            n.high = self.ter_T
+                        if b1.high.label in [0, 1]:  # if no more subtrees
+                            if op == "+":
+                                res_high = b1.high.label or b2.label
+                                #res_high = b1.high.label or b2.label
+                            elif op == "x":
+                                res_high = b1.high.label and b2.label
+                                #res_high = b1.high.label and b2.label
+
+                            if res_high == 1:
+                                n.high = self.ter_T
+                            else:
+                                n.high = self.ter_F
                         else:
-                            n.high = self.ter_F
+                            n.high = self.apply(b2, b1.high, op)
 
                 else:
                     # b1 is terminal
                     if b2.label in self.order:
                         # b2 is non terminal
                         n = Node(b2.label)
-                        if op == "+":
-                            res_low = b2.low.label or b1.label
-                            res_high = b2.high.label or b1.label
-                        elif op == "x":
-                            res_low = b2.low.label and b1.label
-                            res_high = b2.high.label and b1.label
+                        if b2.low.label in [0, 1]:  # if no more subtrees
+                            if op == "+":
+                                res_low = b2.low.label or b1.label
+                                #res_high = b1.high.label or b2.label
+                            elif op == "x":
+                                res_low = b2.low.label and b1.label
+                                #res_high = b1.high.label and b2.label
 
-                        if res_low == 1:
-                            n.low = self.ter_T
+                            if res_low == 1:
+                                n.low = self.ter_T
+                            else:
+                                n.low = self.ter_F
                         else:
-                            n.low = self.ter_F
+                            n.low = self.apply(b1, b2.low, op)
 
-                        if res_high == 1:
-                            n.high = self.ter_T
+                        if b2.high.label in [0, 1]:  # if no more subtrees
+                            if op == "+":
+                                res_high = b2.high.label or b1.label
+                                #res_high = b1.high.label or b2.label
+                            elif op == "x":
+                                res_high = b2.high.label and b1.label
+                                #res_high = b1.high.label and b2.label
+
+                            if res_high == 1:
+                                n.high = self.ter_T
+                            else:
+                                n.high = self.ter_F
                         else:
-                            n.high = self.ter_F
+                            n.high = self.apply(b1, b2.high, op)
 
         return n
 
