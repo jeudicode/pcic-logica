@@ -4,3 +4,4 @@ class Node:
         self.label = label
         self.low = low
         self.high = high
+        self.aux = None
