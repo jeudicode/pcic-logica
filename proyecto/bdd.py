@@ -49,20 +49,30 @@ class BDD:
         source_low = 0
 
         if counter == 0:  # dealing with root
-            if self.f_op[counter] == "-":
-                counter += 1
-                op = self.f_op[counter]
-                q_high = self.build_tree(
-                    Node(label=self.order[counter], index=counter+1, id=counter), counter, 0, op)
-                q_low = self.build_tree(
-                    Node(label=self.order[counter], index=counter+1, id=counter), counter, 1, op)
+            if len(self.order) == 1:
+                if self.f_op[counter] == "-":
+                    self.root.low = Node(label=1, id=1, value=1)
+                    self.root.high = Node(label=0, id=0, value=0)
+                else:
+                    self.root.low = Node(label=0, id=0, value=0)
+                    self.root.high = Node(label=1, id=1, value=1)
+                self.node_count += 2
+                return self.root
             else:
-                counter += 1
-                op = self.f_op[counter - 1]
-                q_high = self.build_tree(
-                    Node(label=self.order[counter], index=counter+1, id=counter), counter, 1, op)
-                q_low = self.build_tree(
-                    Node(label=self.order[counter], index=counter+1, id=counter), counter, 0, op)
+                if self.f_op[counter] == "-":
+                    counter += 1
+                    op = self.f_op[counter]
+                    q_high = self.build_tree(
+                        Node(label=self.order[counter], index=counter+1, id=counter), counter, 0, op)
+                    q_low = self.build_tree(
+                        Node(label=self.order[counter], index=counter+1, id=counter), counter, 1, op)
+                else:
+                    counter += 1
+                    op = self.f_op[counter - 1]
+                    q_high = self.build_tree(
+                        Node(label=self.order[counter], index=counter+1, id=counter), counter, 1, op)
+                    q_low = self.build_tree(
+                        Node(label=self.order[counter], index=counter+1, id=counter), counter, 0, op)
 
         elif counter == len(self.order) - 1:  # dealing with last variable
             if counter == len(self.f_op):
