@@ -27,7 +27,7 @@ class BDD:
         else:
             self.root = root
         self.f_op = []
-
+        self.f_vars = []
         if self.formula != None:
             self.parse_formula()
             self.build_tree()
@@ -37,6 +37,8 @@ class BDD:
         for elem in self.formula:
             if elem in operators:
                 self.f_op.append(elem)
+            else:
+                self.f_vars.append(elem)
 
     """
     Creates the initial tree
@@ -73,9 +75,9 @@ class BDD:
                             counter += 1
                             op = self.f_op[counter]
                             q_high = self.build_tree(
-                                Node(label=self.order[counter], index=counter+1, id=counter), counter, 0, op)
+                                Node(label=self.f_vars[counter], index=counter+1, id=counter), counter, 0, op)
                             q_low = self.build_tree(
-                                Node(label=self.order[counter], index=counter+1, id=counter), counter, 1, op)
+                                Node(label=self.f_vars[counter], index=counter+1, id=counter), counter, 1, op)
                         else:  # single node with negation
                             self.root.low = Node(label=1, id=1, value=1)
                             self.root.high = Node(label=0, id=0, value=0)
@@ -86,11 +88,11 @@ class BDD:
                         counter += 1
                         op = self.f_op[counter - 1]
                         q_high = self.build_tree(
-                            Node(label=self.order[counter], index=counter+1, id=counter), counter, 1, op)
+                            Node(label=self.f_vars[counter], index=counter+1, id=counter), counter, 1, op)
                         q_low = self.build_tree(
-                            Node(label=self.order[counter], index=counter+1, id=counter), counter, 0, op)
+                            Node(label=self.f_vars[counter], index=counter+1, id=counter), counter, 0, op)
 
-        elif counter == len(self.order) - 1:  # dealing with last variable
+        elif counter == len(self.f_vars) - 1:  # dealing with last variable
             if counter == len(self.f_op):
                 if op == "+":
                     source_high = source or source_high
@@ -187,9 +189,9 @@ class BDD:
                     counter += 1
                     op = self.f_op[counter]
                     q_high = self.build_tree(
-                        Node(label=self.order[counter], index=counter+1, id=counter), counter, source_high, op)
+                        Node(label=self.f_vars[counter], index=counter+1, id=counter), counter, source_high, op)
                     q_low = self.build_tree(
-                        Node(label=self.order[counter], index=counter+1, id=counter), counter, source_low, op)
+                        Node(label=self.f_vars[counter], index=counter+1, id=counter), counter, source_low, op)
                 else:
                     if op == "+":
                         source_high = source or source_high
@@ -204,9 +206,9 @@ class BDD:
                     counter += 1
                     op = self.f_op[counter - 1]
                     q_high = self.build_tree(
-                        Node(label=self.order[counter], index=counter+1, id=counter+2), counter, source_high, op)
+                        Node(label=self.f_vars[counter], index=counter+1, id=counter+2), counter, source_high, op)
                     q_low = self.build_tree(
-                        Node(label=self.order[counter], index=counter+1, id=counter+2), counter, source_low, op)
+                        Node(label=self.f_vars[counter], index=counter+1, id=counter+2), counter, source_low, op)
 
         node.high = q_high
         node.low = q_low
