@@ -12,7 +12,7 @@ if len(sys.argv) == 5:
     print("\nFormula for B1: ", b1.formula)
     print("\nOriginal B1:\n")
     b1._print()
-    print("nodes in b1: ", b1.count_nodes())
+    print("nodes in b1: ", b1.node_count)
 
     print("\nReducing B1:\n")
     b1._reduce()
