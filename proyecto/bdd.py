@@ -8,6 +8,8 @@ PCIC - IIMAS @ UNAM
 
 import numpy as np
 from node import Node
+from graphviz import Digraph
+from datetime import datetime
 
 
 class BDD:
@@ -418,3 +420,29 @@ class BDD:
             self._print(node.high)
 
         return node
+
+    def create_graph(self, nodes, title):
+        nodes.reverse()
+
+        v = []
+        e = []
+
+        dot = Digraph(comment=title, format="png", name=title)
+
+        for node in nodes:
+            name = str(node.id)
+            label = str(node.label)
+            dot.node(name, label)
+
+            if node.high != None and node.low != None:
+                e1 = str(node.id) + str(node.high.id)
+                e2 = str(node.id) + str(node.low.id)
+
+                dot.edge(str(node.id), str(node.high.id))
+                dot.edge(str(node.id), str(node.low.id), style="dashed")
+
+        # print("Graph:")
+        # print(dot.source)
+
+        fname = "f" + title + "_" + str(datetime.now())
+        dot.render(fname)
