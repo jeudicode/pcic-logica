@@ -18,10 +18,10 @@ class BDD:
             self.order = [x for x in order]
         else:
             self.order = order
-        self.ter_T = Node(1)
-        self.ter_F = Node(0)
+
+        self.node_count = 0
         if root == None:
-            self.root = Node(self.order[0])
+            self.root = Node(label=self.order[0], id=2, index=1)
         else:
             self.root = root
         self.f_op = []
@@ -29,7 +29,6 @@ class BDD:
         if self.formula != None:
             self.parse_formula()
             self.build_tree()
-        # self._reduce()
 
     """
     Creates the initial tree
@@ -45,6 +44,7 @@ class BDD:
         if node == None:
             node = self.root
 
+        self.node_count += 1
         source_high = 1
         source_low = 0
 
@@ -53,16 +53,16 @@ class BDD:
                 counter += 1
                 op = self.f_op[counter]
                 q_high = self.build_tree(
-                    Node(self.order[counter]), counter, 0, op)
+                    Node(label=self.order[counter], index=counter+1, id=counter), counter, 0, op)
                 q_low = self.build_tree(
-                    Node(self.order[counter]), counter, 1, op)
+                    Node(label=self.order[counter], index=counter+1, id=counter), counter, 1, op)
             else:
                 counter += 1
                 op = self.f_op[counter - 1]
                 q_high = self.build_tree(
-                    Node(self.order[counter]), counter, 1, op)
+                    Node(label=self.order[counter], index=counter+1, id=counter), counter, 1, op)
                 q_low = self.build_tree(
-                    Node(self.order[counter]), counter, 0, op)
+                    Node(label=self.order[counter], index=counter+1, id=counter), counter, 0, op)
 
         elif counter == len(self.order) - 1:  # dealing with last variable
             if counter == len(self.f_op):
@@ -99,14 +99,22 @@ class BDD:
                         source_low = source != source_low
 
             if source_high == 1:
-                q_high = self.ter_T
+                # q_high = self.ter_T
+                self.node_count += 1
+                q_high = Node(label=1, id=1, value=1)
             else:
-                q_high = self.ter_F
+                # q_high = self.ter_F
+                self.node_count += 1
+                q_high = Node(label=0, id=0, value=0)
 
             if source_low == 1:
-                q_low = self.ter_T
+                # q_low = self.ter_T
+                self.node_count += 1
+                q_low = Node(label=1, id=1, value=1)
             else:
-                q_low = self.ter_F
+                # q_low = self.ter_F
+                self.node_count += 1
+                q_low = Node(label=0, id=0, value=0)
 
         else:  # dealing with intermediate variables
             if self.f_op[counter] == "-":
@@ -123,9 +131,9 @@ class BDD:
                 counter += 1
                 op = self.f_op[counter]
                 q_high = self.build_tree(
-                    Node(self.order[counter]), counter, source_high, op)
+                    Node(label=self.order[counter], index=counter+1, id=counter), counter, source_high, op)
                 q_low = self.build_tree(
-                    Node(self.order[counter]), counter, source_low, op)
+                    Node(label=self.order[counter], index=counter+1, id=counter), counter, source_low, op)
             else:
                 if op == "+":
                     source_high = source or source_high
@@ -140,9 +148,9 @@ class BDD:
                 counter += 1
                 op = self.f_op[counter - 1]
                 q_high = self.build_tree(
-                    Node(self.order[counter]), counter, source_high, op)
+                    Node(label=self.order[counter], index=counter+1, id=counter+2), counter, source_high, op)
                 q_low = self.build_tree(
-                    Node(self.order[counter]), counter, source_low, op)
+                    Node(label=self.order[counter], index=counter+1, id=counter+2), counter, source_low, op)
 
         node.high = q_high
         node.low = q_low
@@ -150,29 +158,48 @@ class BDD:
         return node
 
     def _reduce(self, node=None):
-        if node == None:
-            node = self.root
 
-        if node.low != None:
-            if node.low.label not in [0, 1]:
-                node.low = self._reduce(node.low)
-            else:
-                if node.low.label == node.high.label:
-                    return node.low
+        result = []
+        nextid = 0
 
-        if node.high != None:
-            if node.high.label not in [0, 1]:
-                node.high = self._reduce(node.high)
-            else:
-                if node.low.label == node.high.label:
-                    return node.high
+        levels = self.traverse()
+        levels.reverse()
 
-        if node.low.label == node.high.label:
-            return node.high
+        for level in levels:
+            iso = {}
 
-        return node
+            for el in level:
+                # print("el: " + str(el.label) + " " + str(el.value) + " " + str(el.index) +
+                #       " " + str(el.low) + " " + str(el.high))
+                if el.value != None:
+                    key = str(el.value)
+                elif el.low.id == el.high.id:
+                    el.id = el.low.id
+                    continue
+                else:
+                    key = str(el.low.id) + " " + str(el.high.id)
 
-    def apply(self, b1=None, b2=None, op=None):
+                if key in iso:
+                    iso[key].append(el)
+                else:
+                    iso[key] = [el]
+
+            for key, vertices in iso.items():
+                for v in vertices:
+                    v.id = nextid
+                nextid += 1
+
+                x = vertices[0]
+                result.append(x)
+
+                if x.index != None:
+                    x.low = result[x.low.id]
+                    x.high = result[x.high.id]
+
+        self.node_count = len(result)
+        self.root = result[-1]
+
+    def apply(self, b1=None, b2=None, op=None, counter=0):
         if b1 == None:
             b1 = self.root
 
@@ -186,15 +213,19 @@ class BDD:
                 res = b1.label != b2.label
 
             if res == 1:
-                return self.ter_T
+                # return self.ter_T
+                return Node(label=1, id=1, value=1)
             else:
-                return self.ter_F
+                # return self.ter_F
+                return Node(label=0, id=0, value=0)
         else:  # labels are variables
             # subtrees have same root label
             if b1.label == b2.label:
-                n = Node(b1.label)
-                n.low = self.apply(b1.low, b2.low, op)
-                n.high = self.apply(b1.high, b2.high, op)
+                index = self.order.index(b1.label) + 1
+                n = Node(label=b1.label, index=index, id=counter+2)
+                counter += 1
+                n.low = self.apply(b1.low, b2.low, op, counter)
+                n.high = self.apply(b1.high, b2.high, op, counter)
             else:
                 # not the same root
                 if b1.label in self.order:
@@ -204,16 +235,21 @@ class BDD:
                         i2 = self.order.index(b2.label)
 
                         if i1 < i2:
-                            n = Node(b1.label)
-                            n.low = self.apply(b1.low, b2, op)
-                            n.high = self.apply(b1.high, b2, op)
+                            counter += 1
+                            n = Node(label=b1.label,
+                                     index=i1+1, id=counter+2)
+                            n.low = self.apply(b1.low, b2, op, counter)
+                            n.high = self.apply(b1.high, b2, op, counter)
                         elif i1 > i2:
-                            n = Node(b2.label)
-                            n.low = self.apply(b2.low, b1, op)
-                            n.high = self.apply(b2.high, b1, op)
+                            n = Node(label=b2.label,
+                                     index=i2+1, id=counter+2)
+                            n.low = self.apply(b2.low, b1, op, counter)
+                            n.high = self.apply(b2.high, b1, op, counter)
                     else:
                         # b2 is terminal
-                        n = Node(b1.label)
+                        counter += 1
+                        index = self.order.index(b1.label) + 1
+                        n = Node(label=b1.label, index=index, id=counter+2)
                         if b1.low.label in [0, 1]:  # if no more subtrees
                             if op == "+":
                                 res_low = b1.low.label or b2.label
@@ -221,9 +257,11 @@ class BDD:
                                 res_low = b1.low.label and b2.label
 
                             if res_low == 1:
-                                n.low = self.ter_T
+                                # n.low = self.ter_T
+                                n.low = Node(label=1, id=1, value=1)
                             else:
-                                n.low = self.ter_F
+                                # n.low = self.ter_F
+                                n.low = Node(label=0, id=0, value=0)
                         else:
                             n.low = self.apply(b2, b1.low, op)
 
@@ -234,9 +272,11 @@ class BDD:
                                 res_high = b1.high.label and b2.label
 
                             if res_high == 1:
-                                n.high = self.ter_T
+                                #n.high = self.ter_T
+                                n.high = Node(label=1, id=1, value=1)
                             else:
-                                n.high = self.ter_F
+                                # n.high = self.ter_F
+                                n.high = Node(label=0, id=0, value=0)
                         else:
                             n.high = self.apply(b2, b1.high, op)
 
@@ -244,7 +284,9 @@ class BDD:
                     # b1 is terminal
                     if b2.label in self.order:
                         # b2 is non terminal
-                        n = Node(b2.label)
+                        counter += 1
+                        index = self.order.index(b2.label) + 1
+                        n = Node(label=b2.label, index=index, id=counter+2)
                         if b2.low.label in [0, 1]:  # if no more subtrees
                             if op == "+":
                                 res_low = b2.low.label or b1.label
@@ -252,11 +294,13 @@ class BDD:
                                 res_low = b2.low.label and b1.label
 
                             if res_low == 1:
-                                n.low = self.ter_T
+                                # n.low = self.ter_T
+                                n.low = Node(label=1, id=1, value=1)
                             else:
-                                n.low = self.ter_F
+                                # n.low = self.ter_F
+                                n.low = Node(label=0, id=0, value=0)
                         else:
-                            n.low = self.apply(b1, b2.low, op)
+                            n.low = self.apply(b1, b2.low, op, counter)
 
                         if b2.high.label in [0, 1]:  # if no more subtrees
                             if op == "+":
@@ -265,19 +309,36 @@ class BDD:
                                 res_high = b2.high.label and b1.label
 
                             if res_high == 1:
-                                n.high = self.ter_T
+                                # n.high = self.ter_T
+                                n.high = Node(label=1, id=1, value=1)
                             else:
-                                n.high = self.ter_F
+                                # n.high = self.ter_F
+                                n.high = Node(label=0, id=0, value=0)
                         else:
-                            n.high = self.apply(b1, b2.high, op)
+                            n.high = self.apply(b1, b2.high, op, counter)
 
         return n
+
+    def traverse(self):
+        def _traverse(v, levels):
+            if v.index != None:
+                levels[v.index-1].append(v)
+                _traverse(v.low, levels)
+                _traverse(v.high, levels)
+            elif v.value != None:
+                levels[len(levels)-1].append(v)
+
+        levels = []
+        for i in range(len(self.order)+1):
+            levels.append([])
+        _traverse(self.root, levels)
+        return levels
 
     def _print(self, node=None):
         if node == None:
             node = self.root
 
-        print(node.label)
+        print(str(node.label))
         if node.low:
             print("low from " + node.label)
             self._print(node.low)
