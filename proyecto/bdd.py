@@ -215,6 +215,9 @@ class BDD:
 
         return node
 
+    """
+    Reduces current BDD
+    """
     def _reduce(self, node=None):
 
         result = []
@@ -225,7 +228,7 @@ class BDD:
         levels = levels[::-1]
 
         for level in levels:
-            iso = {}
+            iso = {}  # for saving repeated subtrees
 
             for el in level:
                 # print("el: " + str(el.label) + " " + str(el.value) + " " + str(el.index) +
@@ -265,6 +268,9 @@ class BDD:
         # print("root: ", result[-1].label)
         self.root = result[0]
 
+    """
+    Apply operator between current and a separate BDD
+    """
     def apply(self, b1=None, b2=None, op=None, counter=0):
         if b1 == None:
             b1 = self.root
@@ -393,6 +399,9 @@ class BDD:
 
         return n
 
+    """
+    Return array of nodes by level
+    """
     def traverse(self):
         def _traverse(v, levels):
             if v.index != None:
