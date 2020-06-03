@@ -31,3 +31,10 @@ Algunos ejemplos de expresiones:
     -p+q#r
 
 El programa muestra una salida en consola con los resultados de la construcción y reducción de los BDDs. A su vez, crea imágenes con los dibujos de los BDD1, BDD2 y BDD1 op BDD2.
+
+## Limitaciones
+
+1. Solo se aceptan fórmulas en orden consecutivo ascendente.
+2. No se aceptan fórmulas con paréntesis.
+
+Se propone como solución al punto 2 el implementar las fórmulas con notación prefija.
