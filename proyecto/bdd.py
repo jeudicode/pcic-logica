@@ -6,12 +6,20 @@ PCIC - IIMAS @ UNAM
 2020
 """
 
-import numpy as np
+
+"""
+TODO:
+* set prefix notation
+* terminals on input
+
+"""
+
+
+
+
 from node import Node
 from graphviz import Digraph
 from datetime import datetime
-
-
 class BDD:
 
     def __init__(self, formula, order, root=None):
@@ -33,7 +41,7 @@ class BDD:
             self.build_tree()
 
     def parse_formula(self):
-        operators = ["+", "x", "-", "#"]
+        operators = ["+", "&", "-", "#"]
         for elem in self.formula:
             if elem in operators:
                 self.f_op.append(elem)
@@ -97,7 +105,7 @@ class BDD:
                 if op == "+":
                     source_high = source or source_high
                     source_low = source or source_low
-                elif op == "x":
+                elif op == "&":
                     source_high = source and source_high
                     source_low = source and source_low
                 elif op == "#":
@@ -107,11 +115,11 @@ class BDD:
             else:
                 if self.f_op[counter] == "-":
                     if op == "+":
-                        source_high = source or not source_high
-                        source_low = source or not source_low
-                    elif op == "x":
-                        source_high = source and not source_high
-                        source_low = source and not source_low
+                        source_high = source or (not source_high)
+                        source_low = source or (not source_low)
+                    elif op == "&":
+                        source_high = source and (not source_high)
+                        source_low = source and (not source_low)
                     elif op == "#":
                         source_high = source != (not source_high)
                         source_low = source != (not source_low)
@@ -119,7 +127,7 @@ class BDD:
                     if op == "+":
                         source_high = source or source_high
                         source_low = source or source_low
-                    elif op == "x":
+                    elif op == "&":
                         source_high = source and source_high
                         source_low = source and source_low
                     elif op == "#":
@@ -150,7 +158,7 @@ class BDD:
                 if op == "+":
                     source_high = source or source_high
                     source_low = source or source_low
-                elif op == "x":
+                elif op == "&":
                     source_high = source and source_high
                     source_low = source and source_low
                 elif op == "#":
@@ -177,11 +185,11 @@ class BDD:
             else:
                 if self.f_op[counter] == "-":
                     if op == "+":
-                        source_high = source or not source_high
-                        source_low = source or not source_low
-                    elif op == "x":
-                        source_high = source and not source_high
-                        source_low = source and not source_low
+                        source_high = source or (not source_high)
+                        source_low = source or (not source_low)
+                    elif op == "&":
+                        source_high = source and (not source_high)
+                        source_low = source and (not source_low)
                     elif op == "#":
                         source_high = source != (not source_high)
                         source_low = source != (not source_low)
@@ -196,7 +204,7 @@ class BDD:
                     if op == "+":
                         source_high = source or source_high
                         source_low = source or source_low
-                    elif op == "x":
+                    elif op == "&":
                         source_high = source and source_high
                         source_low = source and source_low
                     elif op == "#":
@@ -218,6 +226,7 @@ class BDD:
     """
     Reduces current BDD
     """
+
     def _reduce(self, node=None):
 
         result = []
@@ -225,7 +234,10 @@ class BDD:
 
         levels = self.traverse()
         # print("levels: ", levels)
+        # print("***************************")
         levels = levels[::-1]
+
+        # print("levels reversed: ", levels)
 
         for level in levels:
             iso = {}  # for saving repeated subtrees
@@ -271,6 +283,7 @@ class BDD:
     """
     Apply operator between current and a separate BDD
     """
+
     def apply(self, b1=None, b2=None, op=None, counter=0):
         if b1 == None:
             b1 = self.root
@@ -279,7 +292,7 @@ class BDD:
             # both are terminals
             if op == "+":
                 res = b1.label or b2.label
-            elif op == "x":
+            elif op == "&":
                 res = b1.label and b2.label
             elif op == "#":
                 res = b1.label != b2.label
@@ -306,7 +319,7 @@ class BDD:
                         i1 = self.order.index(b1.label)
                         i2 = self.order.index(b2.label)
 
-                        if i1 < i2:
+                        if i1 <= i2:
                             counter += 1
                             n = Node(label=b1.label,
                                      index=i1+1, id=counter+2)
@@ -325,7 +338,7 @@ class BDD:
                         if b1.low.label in [0, 1]:  # if no more subtrees
                             if op == "+":
                                 res_low = b1.low.label or b2.label
-                            elif op == "x":
+                            elif op == "&":
                                 res_low = b1.low.label and b2.label
                             elif op == "#":
                                 res_low = b1.low.label != b2.label
@@ -342,7 +355,7 @@ class BDD:
                         if b1.high.label in [0, 1]:  # if no more subtrees
                             if op == "+":
                                 res_high = b1.high.label or b2.label
-                            elif op == "x":
+                            elif op == "&":
                                 res_high = b1.high.label and b2.label
                             elif op == "#":
                                 res_high = b1.high.label != b2.label
@@ -366,7 +379,7 @@ class BDD:
                         if b2.low.label in [0, 1]:  # if no more subtrees
                             if op == "+":
                                 res_low = b2.low.label or b1.label
-                            elif op == "x":
+                            elif op == "&":
                                 res_low = b2.low.label and b1.label
                             elif op == "#":
                                 res_low = b2.low.label != b1.label
@@ -383,7 +396,7 @@ class BDD:
                         if b2.high.label in [0, 1]:  # if no more subtrees
                             if op == "+":
                                 res_high = b2.high.label or b1.label
-                            elif op == "x":
+                            elif op == "&":
                                 res_high = b2.high.label and b1.label
                             elif op == "#":
                                 res_high = b2.high.label != b1.label
@@ -402,6 +415,7 @@ class BDD:
     """
     Return array of nodes by level
     """
+
     def traverse(self):
         def _traverse(v, levels):
             if v.index != None:
