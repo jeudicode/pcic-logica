@@ -6,6 +6,8 @@ El proyecto consiste en hacer una implementación de diagramas binarios de decis
 
 ### Uso
 
+Es necesario instalar el paquete graphviz: https://pypi.org/project/graphviz/
+
 La aplicación se ejecuta mediante línea de comandos con la siguiente estructura:
 
 `python main.py <formula1> <formula2> <op> <order>`

@@ -1,0 +1,140 @@
+\documentclass[letterpaper,12pt]{memoir}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{amsfonts}
+\usepackage{mathptmx}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1.3in]{geometry}
+\usepackage{amsthm}
+\usepackage{marvosym}
+\usepackage{bm}
+\usepackage{tikz}
+\usepackage[tableaux]{prooftrees}
+
+\linespread{1.3}
+
+
+\usetikzlibrary{automata, positioning, arrows, fit}
+\tikzset{
+  ->,
+  >=stealth',
+  node distance=2cm,
+  every state/.style={thick},
+  initial text=$ $,
+}
+
+\renewcommand\qedsymbol{\Squarepipe}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definición}[section]
+\newtheorem*{thm}{Teorema}
+\newtheorem{solution}{Solución}
+
+
+\setlength\parindent{0pt}
+
+\newcounter{paragraphnumber}
+\newcommand{\para}{%
+  \vspace{10pt}\noindent{\bfseries\refstepcounter{paragraphnumber}\theparagraphnumber.\quad}%
+}
+
+\setsecheadstyle{\large\bfseries}
+\setsubsecheadstyle{\bfseries}
+
+\setlength\parindent{0pt}
+
+\pagenumbering{gobble}
+
+%\usepackage[margin=1in]{geometry}
+
+\usepackage{enumitem}
+\setlist{nosep}
+
+\usepackage{xcolor}
+
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks,
+  linkcolor={red!50!black},
+  citecolor={blue!50!black},
+  urlcolor={green!50!black}
+}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\begin{document}
+
+\begin{center}
+  {\large Lógica Computacional}\\
+  \vspace{0.2cm}
+  {\large\bfseries Tarea 6}\\
+  \vspace{0.2cm}
+  {\large PCIC - UNAM}\\
+  \vspace{0.5cm}
+  {\itshape 21 de mayo de 2020}\\
+  \vspace{0.5cm}
+  Diego de Jesús Isla López\\
+  (\href{mailto:dislalopez@gmail.com}{\itshape dislalopez@gmail.com})\\
+  (\href{mailto:diego.isla@comunidad.unam.mx}{\itshape diego.isla@comunidad.unam.mx})\\
+\end{center}
+
+
+\section*{Problema 15.2}
+
+Sean \verb|S1|: \verb|x = x+y| y  \verb|S2|: \verb|y = x*y|, ¿cuál es la precondición más débil \(wp(S1,S2,x<y)\)?
+
+\begin{solution}
+
+Primero obtenemos \(wp(S2, x<y)\):
+
+\begin{align*}
+wp(\texttt{y=x*y},x<y) &= x < x*y
+\end{align*}
+
+Usando el resultado anterior\\
+	\begin{align*}
+	wp(\texttt{x=x+y},\texttt{y=x*y},x<y)  &= wp(\texttt{x=x+y}, x<x*y)\\
+										  &= x<x*y[x\leftarrow x+y]\\
+										  &= x+y<(x+y)*y\\
+	\end{align*}
+\end{solution}
+
+\section*{Problema 15.7}
+\begin{proof}
+	Tomamos como invariante de bucle \(\{(0 \leq x^2 \leq a) \land y = (x+1)^2\}\).
+	
+	Para demostrar \((0 \leq x^2 \leq a)\) tenemos que:
+	
+	\begin{align*}
+	x'^2 &= (x+1)^2 = y 
+	\end{align*}
+	
+	Esto es, que el valor de \(x'\) siempre será igual a \(y\) antes de que esta variable sea modificada.
+	
+	Para demostrar \(y = (x+1)^2\) tenemos:
+	
+	\begin{align*}
+	x' &= x + 1\\
+	y' &= y + 2x' + 1\\
+	y' &= (x+1)^2 + 2(x+1) + 1\\
+	y' &= x^2 + 4x + 4\\
+	y' &= (x+2)^2\\
+	y' &= (x'+1)^2\\
+	\end{align*}
+\end{proof}
+
+
+
+
+\section*{Problema 15.10}
+
+\begin{proof}
+	Tomamos la invariante \(z \cdot x^y = a^b\). En el caso en el que \(y\) sea par, podemos decir sin pérdida de generalidad que \(y = 2k\) para alguna \(k\). Entonces \(z\cdot x^{2k} = z \cdot (x^2)^k \). En el caso en el que \(y\) es impar, tenemos \(z \cdot x^y = z \cdot (x \cdot x^{y-1}) = (z \cdot x) \cdot x^{y-1} \). Al final del ciclo, se tiene \(y = 0\) y por lo tanto \(z \cdot x^0 = z = a^b\).
+	
+\end{proof}
+
+
+ 
+
+\end{document}

@@ -17,6 +17,7 @@ TODO:
 
 
 
+import sys
 from node import Node
 from graphviz import Digraph
 from datetime import datetime
@@ -31,14 +32,21 @@ class BDD:
 
         self.node_count = 0
         if root == None:
-            self.root = Node(label=self.order[0], id=2, index=1)
+            if len(self.formula) == 1:
+                self.root = Node(label=self.order[0], id=2, index=1)
         else:
             self.root = root
         self.f_op = []
         self.f_vars = []
+
         if self.formula != None:
-            self.parse_formula()
-            self.build_tree()
+            if self.root.label not in self.order:
+                print("foo")
+                if self.root.label not in [0, 1]:
+                    sys.exit("Not a terminal or variable in order")
+            else:
+                self.parse_formula()
+                self.build_tree()
 
     def parse_formula(self):
         operators = ["+", "&", "-", "#"]
@@ -52,7 +60,7 @@ class BDD:
     Creates the initial tree
     """
 
-    def build_tree(self, node=None, counter=0, source=0, op=None):
+    def build_tree(self, node=None, source=0, op=None):
         if node == None:
             node = self.root
 
@@ -60,164 +68,25 @@ class BDD:
         source_high = 1
         source_low = 0
 
-        if counter == 0:  # dealing with root
-            if len(self.order) == 1:
-                if self.f_op[counter] == "-":
-                    self.root.low = Node(label=1, id=1, value=1)
-                    self.root.high = Node(label=0, id=0, value=0)
-                else:
-                    self.root.low = Node(label=0, id=0, value=0)
-                    self.root.high = Node(label=1, id=1, value=1)
-                self.node_count += 2
-                return self.root
+        if len(self.f_op) == 0:
+            if len(self.f_vars) == 0:
+                pass
             else:
-                if counter == len(self.f_op):  # no operator, single variable
-                    self.root.label = self.formula
-                    self.root.low = Node(label=0, id=0, value=0)
-                    self.root.high = Node(label=1, id=1, value=1)
-                    self.node_count += 2
-                    return self.root
+                fv = self.f_vars.pop(0)
+                if node.label in ["0", "1"]:
+                    pass
                 else:
-                    if self.f_op[counter] == "-":
-                        if len(self.f_op) > 1:
-                            counter += 1
-                            op = self.f_op[counter]
-                            q_high = self.build_tree(
-                                Node(label=self.f_vars[counter], index=counter+1, id=counter), counter, 0, op)
-                            q_low = self.build_tree(
-                                Node(label=self.f_vars[counter], index=counter+1, id=counter), counter, 1, op)
-                        else:  # single node with negation
-                            self.root.low = Node(label=1, id=1, value=1)
-                            self.root.high = Node(label=0, id=0, value=0)
-                            self.node_count += 2
-                            return self.root
+                    pass
+        else:
+            fop = self.f_op.pop(0)
+            fv = self.f_vars.pop(0)
 
-                    else:
-                        counter += 1
-                        op = self.f_op[counter - 1]
-                        q_high = self.build_tree(
-                            Node(label=self.f_vars[counter], index=counter+1, id=counter), counter, 1, op)
-                        q_low = self.build_tree(
-                            Node(label=self.f_vars[counter], index=counter+1, id=counter), counter, 0, op)
-
-        elif counter == len(self.f_vars) - 1:  # dealing with last variable
-            if counter == len(self.f_op):
-                if op == "+":
-                    source_high = source or source_high
-                    source_low = source or source_low
-                elif op == "&":
-                    source_high = source and source_high
-                    source_low = source and source_low
-                elif op == "#":
-                    source_high = source != source_high
-                    source_low = source != source_low
-
+            if fop == "-":
+                q_high = self.build_tree(Node(), 0, fop)
+                q_low = self.build_tree(Node(), 1, fop)
             else:
-                if self.f_op[counter] == "-":
-                    if op == "+":
-                        source_high = source or (not source_high)
-                        source_low = source or (not source_low)
-                    elif op == "&":
-                        source_high = source and (not source_high)
-                        source_low = source and (not source_low)
-                    elif op == "#":
-                        source_high = source != (not source_high)
-                        source_low = source != (not source_low)
-                else:
-                    if op == "+":
-                        source_high = source or source_high
-                        source_low = source or source_low
-                    elif op == "&":
-                        source_high = source and source_high
-                        source_low = source and source_low
-                    elif op == "#":
-                        source_high = source != source_high
-                        source_low = source != source_low
-
-            if source_high == 1:
-                # q_high = self.ter_T
-                self.node_count += 1
-                q_high = Node(label=1, id=1, value=1)
-            else:
-                # q_high = self.ter_F
-                self.node_count += 1
-                q_high = Node(label=0, id=0, value=0)
-
-            if source_low == 1:
-                # q_low = self.ter_T
-                self.node_count += 1
-                q_low = Node(label=1, id=1, value=1)
-            else:
-                # q_low = self.ter_F
-                self.node_count += 1
-                q_low = Node(label=0, id=0, value=0)
-
-        else:  # dealing with intermediate variables
-            if counter == len(self.f_op):
-                # more variables in order than in formula
-                if op == "+":
-                    source_high = source or source_high
-                    source_low = source or source_low
-                elif op == "&":
-                    source_high = source and source_high
-                    source_low = source and source_low
-                elif op == "#":
-                    source_high = source != source_high
-                    source_low = source != source_low
-
-                if source_high == 1:
-                    # q_high = self.ter_T
-                    self.node_count += 1
-                    q_high = Node(label=1, id=1, value=1)
-                else:
-                    # q_high = self.ter_F
-                    self.node_count += 1
-                    q_high = Node(label=0, id=0, value=0)
-
-                if source_low == 1:
-                    # q_low = self.ter_T
-                    self.node_count += 1
-                    q_low = Node(label=1, id=1, value=1)
-                else:
-                    # q_low = self.ter_F
-                    self.node_count += 1
-                    q_low = Node(label=0, id=0, value=0)
-            else:
-                if self.f_op[counter] == "-":
-                    if op == "+":
-                        source_high = source or (not source_high)
-                        source_low = source or (not source_low)
-                    elif op == "&":
-                        source_high = source and (not source_high)
-                        source_low = source and (not source_low)
-                    elif op == "#":
-                        source_high = source != (not source_high)
-                        source_low = source != (not source_low)
-
-                    counter += 1
-                    op = self.f_op[counter]
-                    q_high = self.build_tree(
-                        Node(label=self.f_vars[counter], index=counter+1, id=counter), counter, source_high, op)
-                    q_low = self.build_tree(
-                        Node(label=self.f_vars[counter], index=counter+1, id=counter), counter, source_low, op)
-                else:
-                    if op == "+":
-                        source_high = source or source_high
-                        source_low = source or source_low
-                    elif op == "&":
-                        source_high = source and source_high
-                        source_low = source and source_low
-                    elif op == "#":
-                        source_high = source != source_high
-                        source_low = source != source_low
-
-                    counter += 1
-                    op = self.f_op[counter - 1]
-                    q_high = self.build_tree(
-                        Node(label=self.f_vars[counter], index=counter+1, id=counter+2), counter, source_high, op)
-                    q_low = self.build_tree(
-                        Node(label=self.f_vars[counter], index=counter+1, id=counter+2), counter, source_low, op)
-
+                q_high = self.build_tree(Node(), 1, fop)
+                q_low = self.build_tree(Node(), 0, fop)
         node.high = q_high
         node.low = q_low
 
